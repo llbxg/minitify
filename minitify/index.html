@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' ;" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel ="stylesheet" href="static/css/main.css"/>
+    <link rel="icon" href='/favicon.ico'>
+    <title>minitify</title>
+</head>
+
+<body>
+    <header>
+        <button class="option" id="closeB" >×</button>
+    </header>
+    <main>
+        <button class="btn previous" id="previous" onclick="window.spotify.skipToPrevious();"></button>
+        <button class="btn next" id="next" onclick="window.spotify.skipToNext();"></button>
+        <button class="btn pp" id="pp" onclick="window.spotify.playXpause();"></button>
+        <img id="jucket">
+        <input id="playingTrack" type="hidden">
+    </main>
+</body>
+
+<script type = "text/javascript">
+    window.spotify.setJucket()
+
+    const intervalId = setInterval(()=>{
+        window.spotify.setJucket()
+    }, 1*1000);
+
+    closeB.addEventListener("click", (e) =>{
+        window.api.close();
+    });
+</script>
+
+</html>
