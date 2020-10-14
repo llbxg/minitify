@@ -106,11 +106,13 @@ async function setJucket() {
         statusCode = data.statusCode;
 
         if (statusCode==200){
-            if(data.body.item.name != playingTrack.value){
+            let name = data.body.item.name
+            if(name != playingTrack.value){
                 const url = data.body.item.album.images[0].url;
                 albumJucket.setAttribute("src", url);
-                playingTrack.setAttribute("value", data.body.item.name);
+                playingTrack.setAttribute("value", name);
                 setColor(url);
+                ipcRenderer.send('setName', name);
             }
 
         } else {
@@ -197,4 +199,20 @@ async function skipToBack(){
             console.log('Something went wrong!', err);
         };
     }
+}
+
+let name = null
+
+exports.sendTrackName = sendTrackName
+function sendTrackName(){
+    ipcRenderer.send("getName", name);
+}
+exports.setTrackName = setTrackName
+function setTrackName(){
+    console.log("in setTrackName")
+    ipcRenderer.on("replyName", (event, args) => {
+        name = args
+        const trackName = document.getElementById('trackName');
+        trackName.textContent = name
+    });
 }

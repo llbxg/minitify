@@ -18,12 +18,14 @@
         <button class="btn previous" id="previous" onclick="window.spotify.skipToBack();"></button>
         <button class="btn next" id="next" onclick="window.spotify.skipToNext();"></button>
         <button class="btn pp" id="pp" onclick="window.spotify.playXpause();"></button>
+        <button class="btn cont" id="cont" onclick="window.api.makeChild(window.parent.screen.height)"></button>
         <img id="jucket">
         <input id="playingTrack" type="hidden">
     </main>
 </body>
 
 <script type = "text/javascript">
+    console.log(window.parent.screen.width)
     window.spotify.setJucket()
 
     const intervalId = setInterval(()=>{
@@ -31,7 +33,7 @@
     }, 1*1000);
 
     closeB.addEventListener("click", (e) =>{
-        window.api.close();
+        window.api.close("main");
     });
 </script>
 

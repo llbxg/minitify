@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' ;" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel ="stylesheet" href="static/css/main.css"/>
+    <link rel ="stylesheet" href="static/css/heart.css"/>
+    <link rel="icon" href='/favicon.ico'>
+    <title>minitify-controller</title>
+</head>
+
+<body>
+    <header>
+        <button class="option" id="closeB" >×</button>
+    </header>
+    <main>
+        <div id="trackName"></div>
+    </main>
+</body>
+
+<script type = "text/javascript">
+    const intervalId = setInterval(()=>{
+        window.api.sendTrackName();
+    }, 0.5*1000);
+
+    window.api.setTrackName();
+
+    closeB.addEventListener("click", (e) =>{
+        window.api.close("controller");
+    });
+</script>
+
+</html>
