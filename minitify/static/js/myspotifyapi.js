@@ -172,3 +172,29 @@ async function skipToNext(){
     };
 
 }
+
+exports.skipToBack = skipToBack
+
+let start = Date.now() - 5000;
+
+async function skipToBack(){
+    const now = Date.now()
+    console.log(now-start)
+    if ((now - start)>3000){
+        spotifyApi.seek(0)
+        try{
+            console.log('Seek to 0');
+            start = now;
+        } catch (err) {
+            console.log('Something went wrong!', err);
+        };
+    } else {
+        spotifyApi.skipToPrevious()
+        try{
+            console.log('Skip to previous');
+            start = now - 5000;
+        } catch (err) {
+            console.log('Something went wrong!', err);
+        };
+    }
+}
