@@ -5,7 +5,8 @@
     --color-grad-2: rgba(255, 255, 255, 0);
 
     --font-size-normal: 21px;
-    --font-size-super-small: 12px;
+    --font-size-super-small: 15px;
+    --font-size-mega-small: 10px;
 
     --height-header: 20px;
 
@@ -94,6 +95,7 @@ main{
     outline: none;
     border: none;
 }
+
 .btn:hover{
     opacity: var(--hover-opacity);
 }
@@ -137,10 +139,42 @@ main{
 }
 
 #trackName{
-    font-size: var(--font-size-super-small);
+    font-size: var(--font-size-mega-small);
 
-    width: 100%;
-    height: 100%;
-    text-align:center;
-    padding-top: var(--height-header);
+    width: 100px;
+    height: 15px;
+
+
+    position: absolute;
+    top: calc(var(--height-header) + 0px);
+    left: 13px;
+
+    text-align:left;
+    -webkit-user-select: none;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#trackName::-webkit-scrollbar {  /* Chrome, Safari 対応 */
+    display:none;
+}
+
+#artistsName{
+    font-size: calc(var(--font-size-mega-small)  - 2px);
+
+    width: 100px;
+    text-align:left;
+
+    position: absolute;
+    top: calc(var(--height-header) + 0px + 15px + 2px);
+    left: 13px;
+
+    text-align:left;
+    -webkit-user-select: none;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#artistsName::-webkit-scrollbar {  /* Chrome, Safari 対応 */
+    display:none;
 }

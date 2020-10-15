@@ -1,0 +1,14 @@
+:root{
+    --size:15px;
+    --color-heart: white;
+}
+
+.heart {
+    fill: var(--color-heart);
+
+    width: var(--size);
+
+    position: absolute;
+    right:13px;
+    top: calc(var(--size) + 6px);
+}

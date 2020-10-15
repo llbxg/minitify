@@ -107,12 +107,14 @@ async function setJucket() {
 
         if (statusCode==200){
             let name = data.body.item.name
+            let id = data.body.item.id
+            let artists = data.body.item.artists[0].name
             if(name != playingTrack.value){
                 const url = data.body.item.album.images[0].url;
                 albumJucket.setAttribute("src", url);
                 playingTrack.setAttribute("value", name);
                 setColor(url);
-                ipcRenderer.send('setName', name);
+                sendfromPlayerToMain([name, id, artists]);
             }
 
         } else {
@@ -201,18 +203,47 @@ async function skipToBack(){
     }
 }
 
-let name = null
+function checkSavedTracks(id){
+    spotifyApi.containsMySavedTracks([id])
+    .then(function(data) {
+        const trackIsInYourMusic = data.body[0];
 
-exports.sendTrackName = sendTrackName
-function sendTrackName(){
-    ipcRenderer.send("getName", name);
+        if (trackIsInYourMusic) {
+            const heart = document.getElementById('heart');
+            heart.setAttribute("style", "fill: red;");
+            console.log('Track was found in the user\'s Your Music library');
+        } else {
+            heart.setAttribute("style", "fill: var(--color-heart);");
+            console.log('Track was not found.');
+        }
+    }, function(err) {
+        console.log('Something went wrong!', err);
+    });
 }
-exports.setTrackName = setTrackName
-function setTrackName(){
-    console.log("in setTrackName")
-    ipcRenderer.on("replyName", (event, args) => {
-        name = args
+
+/* ---------- 🥬 communication ---------- */
+
+function sendfromPlayerToMain(data){
+    ipcRenderer.send('fromPlayerToMain', data);
+}
+
+let name = null;
+let id = null;
+let artists = null;
+
+exports.checkFromControllerToMain = checkFromControllerToMain
+function checkFromControllerToMain(){
+    ipcRenderer.send("fromControllerToMain", id);
+}
+
+exports.getfromMainToController = getfromMainToController
+function getfromMainToController(){
+    ipcRenderer.on("fromMainToController", (event, args) => {
+        [name, id, artists] = args;
         const trackName = document.getElementById('trackName');
-        trackName.textContent = name
+        trackName.textContent = `${name}`;
+        const artistsName = document.getElementById('artistsName');
+        artistsName.textContent = artists;
+        checkSavedTracks(id);
     });
 }

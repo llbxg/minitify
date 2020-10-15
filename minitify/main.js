@@ -49,10 +49,10 @@ function createChildWindow (y) {
         y:childY,
 
         width: 150,
-        height: 60,
+        height: 65,
         resizable:false,
         frame: false,
-        opacity: 0.3,
+        opacity: 1,
         backgroundColor:'#16181D',
 
         webPreferences: {
@@ -88,30 +88,11 @@ app.on('window-all-closed', () => {
 });
 */
 
+/* ---------- 🥬 basic ---------- */
+
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
-    }
-});
-
-ipcMain.on('plz-path', (event,) => {
-    event.returnValue = app.getPath('userData');
-});
-
-ipcMain.on('makeChild', (event,height) => {
-    if(childWin == null){
-        createChildWindow(height);
-    }
-});
-
-let name = null
-ipcMain.on("setName", (event, args) => {
-    name = args;
-});
-
-ipcMain.on('getName', (event,args) => {
-    if (args != name){
-        event.sender.send('replyName', name);
     }
 });
 
@@ -126,3 +107,32 @@ ipcMain.on("close", (event, args) => {
         childWin.close()
     }
 });
+
+ipcMain.on('makeChild', (event,height) => {
+    if(childWin == null){
+        createChildWindow(height);
+    }
+});
+
+
+
+// 🥬 - 同期処理
+ipcMain.on('plz-path', (event,) => {
+    event.returnValue = app.getPath('userData');
+});
+
+
+/* ---------- 🥬 communication ---------- */
+
+let [name, id, artists] = [null, null, null]
+
+ipcMain.on("fromPlayerToMain", (event, data) => {
+    [name, id, artists] = data;
+});
+
+ipcMain.on('fromControllerToMain', (event,args) => {
+    if (args != id){
+        event.sender.send('fromMainToController', [name, id, artists]);
+    }
+});
+

@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const { setJucket, playXpause, skipToNext, skipToPrevious, skipToBack, sendTrackName, setTrackName } = require('./static/js/myspotifyapi.js')
+const { setJucket, playXpause, skipToNext, skipToPrevious, skipToBack, checkFromControllerToMain, getfromMainToController } = require('./static/js/myspotifyapi.js')
 
 
 contextBridge.exposeInMainWorld(
@@ -18,9 +18,9 @@ contextBridge.exposeInMainWorld(
         close: (where) => {
             ipcRenderer.send('close', where);
         },
-        sendTrackName:sendTrackName,
-        setTrackName:setTrackName,
-        makeChild:(height)=>{
+        checkFromControllerToMain: checkFromControllerToMain,
+        getfromMainToController: getfromMainToController,
+        makeChild: (height) => {
             ipcRenderer.send('makeChild', height);
         }
      }
