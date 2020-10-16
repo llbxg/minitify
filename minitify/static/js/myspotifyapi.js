@@ -203,6 +203,8 @@ async function skipToBack(){
     }
 }
 
+let favorite = null
+
 function checkSavedTracks(id){
     spotifyApi.containsMySavedTracks([id])
     .then(function(data) {
@@ -212,14 +214,51 @@ function checkSavedTracks(id){
             const heart = document.getElementById('heart');
             heart.setAttribute("style", "fill: red;");
             console.log('Track was found in the user\'s Your Music library');
+            favorite = true
         } else {
             heart.setAttribute("style", "fill: var(--color-heart);");
             console.log('Track was not found.');
+            favorite = false
         }
     }, function(err) {
         console.log('Something went wrong!', err);
     });
 }
+
+exports.addOrRemove = addOrRemove
+function addOrRemove(){
+    const heart = document.getElementById('heart');
+    if(favorite){
+        removeFromSaved(id)
+        console.log("remove!!!")
+        favorite = false
+        heart.setAttribute("style", "fill: var(--color-heart);");
+    } else {
+        addToSaved(id)
+        console.log("add")
+        favorite = true
+        heart.setAttribute("style", "fill: red;");
+    }
+}
+
+async function addToSaved(id){
+    spotifyApi.addToMySavedTracks([id])
+    .then(function(data) {
+        console.log('Added track!');
+    }, function(err) {
+        console.log('Something went wrong!', err);
+    });
+}
+
+async function removeFromSaved(id){
+    spotifyApi.removeFromMySavedTracks([id])
+    .then(function(data) {
+        console.log('Removed!');
+    }, function(err) {
+        console.log('Something went wrong!', err);
+    });
+};
+
 
 /* ---------- 🥬 communication ---------- */
 

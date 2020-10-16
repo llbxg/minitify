@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const { setJucket, playXpause, skipToNext, skipToPrevious, skipToBack, checkFromControllerToMain, getfromMainToController } = require('./static/js/myspotifyapi.js')
+const { setJucket, playXpause, skipToNext, skipToPrevious, skipToBack, checkFromControllerToMain, getfromMainToController, addOrRemove } = require('./static/js/myspotifyapi.js')
 
 
 contextBridge.exposeInMainWorld(
@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld(
         skipToNext: skipToNext,
         skipToPrevious: skipToPrevious,
         skipToBack: skipToBack,
+        addOrRemove: addOrRemove,
     }
 );
 
