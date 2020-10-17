@@ -93,7 +93,13 @@ async function refreshAccessToken(){
 const func4s = {
     401: () => {
         refreshAccessToken();
-    }
+    },
+    403: () => {
+        console.log('There are too many accesses or the rate limit has been exceeded.')
+    },
+    404: () => {
+        console.log('404 / Not Found')
+    },
 }
 
 // 🥬 メインの関数って感じ
@@ -129,12 +135,17 @@ async function setJucket() {
         if(func4s[statusCode] != null){
             func4s[statusCode]();
         }else{
-            console.log(`i dont prepare to support for ${e}`);
+            if (e.statusCode != null){
+                console.log(`i dont prepare to support for ${e}/${e.statusCode}`);
+            } else {
+                console.log(`i dont prepare to support for ${e}`);
+            }
         }
     }
 }
 
-exports.playXpause = async function playXpause() {
+exports.playXpause = playXpause
+async function playXpause() {
     spotifyApi.getMyCurrentPlaybackState()
     .then(function(data) {
         if (data.body && data.body.is_playing) {
@@ -142,14 +153,22 @@ exports.playXpause = async function playXpause() {
             .then(function() {
                 console.log('Playback paused');
             }, function(err) {
-                console.log('Something went wrong!', err);
+                if(func4s[err.statusCode] != null){
+                    func4s[err.statusCode]();
+                } else {
+                    console.log('Something went wrong!', err);
+                }
             });
         } else {
             spotifyApi.play()
             .then(function() {
                 console.log('Playback started');
             }, function(err) {
-                console.log('Something went wrong!', err);
+                if(func4s[err.statusCode] != null){
+                    func4s[err.statusCode]();
+                } else {
+                    console.log('Something went wrong!', err);
+                }
             });
         }
     }, function(err) {
@@ -163,7 +182,11 @@ exports.skipToNext = async function skipToNext() {
         console.log('Skip to next');
         setJucket();
     }, err => {
-        console.log('Something went wrong!', err);
+        if(func4s[err.statusCode] != null){
+            func4s[err.statusCode]();
+        } else {
+            console.log('Something went wrong!', err);
+        }
     });
 }
 
@@ -188,20 +211,34 @@ async function skipToBack(){
     console.log(now-start)
     if ((now - start)>3000){
         spotifyApi.seek(0)
-        try{
+        .then(()=>{
             console.log('Seek to 0');
             start = now;
-        } catch (err) {
-            console.log('Something went wrong!', err);
-        };
+        },err => {
+            if(func4s[err.statusCode] != null){
+                func4s[err.statusCode]();
+            } else {
+                if(err.statusCode!=null){
+                    console.log(err.statusCode)
+                }
+                console.log('Something went wrong!', err);
+            }
+        })
     } else {
         spotifyApi.skipToPrevious()
-        try{
+        .then(()=>{
             console.log('Skip to previous');
             start = now - 5000;
-        } catch (err) {
-            console.log('Something went wrong!', err);
-        };
+        },err => {
+            if(func4s[err.statusCode] != null){
+                func4s[err.statusCode]();
+            } else {
+                if(err.statusCode!=null){
+                    console.log(err.statusCode)
+                }
+                console.log('Something went wrong!', err);
+            }
+        })
     }
 }
 
