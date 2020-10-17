@@ -29,38 +29,43 @@ spotifyApi.setClientSecret(clientSecret);
 let favorite = null
 
 function checkSavedTracks(id){
-    spotifyApi.containsMySavedTracks([id])
-    .then(function(data) {
-        const trackIsInYourMusic = data.body[0];
-
-        if (trackIsInYourMusic) {
-            const heart = document.getElementById('heart');
-            heart.setAttribute("style", "fill: red;");
-            console.log('Track was found in the user\'s Your Music library');
-            favorite = true
-        } else {
-            heart.setAttribute("style", "fill: var(--color-heart);");
-            console.log('Track was not found.');
-            favorite = false
-        }
-    }, function(err) {
-        console.log('Something went wrong!', err);
-    });
+    const heart = document.getElementById('heart');
+    if (id != null){
+        spotifyApi.containsMySavedTracks([id])
+        .then(function(data) {
+            const trackIsInYourMusic = data.body[0];
+            if (trackIsInYourMusic) {
+                heart.setAttribute("style", "fill: red;");
+                console.log('Track was found in the user\'s Your Music library');
+                favorite = true
+            } else {
+                heart.setAttribute("style", "fill: var(--color-heart);");
+                console.log('Track was not found.');
+                favorite = false
+            }
+        }, function(err) {
+            console.log('Something went wrong!', err);
+        });
+    } else {
+        heart.setAttribute("style", "fill: var(--color-heart);");
+    }
 }
 
 exports.addOrRemove = addOrRemove
 function addOrRemove(){
-    const heart = document.getElementById('heart');
-    if(favorite){
-        removeFromSaved(id)
-        console.log("remove!!!")
-        favorite = false
-        heart.setAttribute("style", "fill: var(--color-heart);");
-    } else {
-        addToSaved(id)
-        console.log("add")
-        favorite = true
-        heart.setAttribute("style", "fill: red;");
+    if(id != null){
+        const heart = document.getElementById('heart');
+        if(favorite){
+            removeFromSaved(id)
+            console.log("remove!!!")
+            favorite = false
+            heart.setAttribute("style", "fill: var(--color-heart);");
+        } else {
+            addToSaved(id)
+            console.log("add")
+            favorite = true
+            heart.setAttribute("style", "fill: red;");
+        }
     }
 }
 
@@ -87,7 +92,6 @@ async function removeFromSaved(id){
 
 let [name, id, artists] = [null, null, null];
 
-// 🥬 メインの関数って感じ
 exports.checkFromControllerToMain = checkFromControllerToMain
 function checkFromControllerToMain(){
     ipcRenderer.send("fromControllerToMain", id);
@@ -99,10 +103,16 @@ function getfromMainToController(){
         if(args.length == 3 ){
             [name, id, artists] = args;
             const trackName = document.getElementById('trackName');
-            trackName.textContent = `${name}`;
             const artistsName = document.getElementById('artistsName');
-            artistsName.textContent = artists;
+            if (id != null){
+                trackName.textContent = name;
+                artistsName.textContent = artists;
+            } else {
+                trackName.textContent = '';
+                artistsName.textContent = '';
+            }
             checkSavedTracks(id);
+
         } else if (args.length == 1){
             if(args){
                 console.log('The access token has been refreshed!');

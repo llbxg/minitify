@@ -121,6 +121,7 @@ async function setJucket() {
         } else {
             albumJucket.setAttribute("src", "");
             playingTrack.setAttribute("value", "no music");
+            sendfromPlayerToMain([null, null, null]);
         }
 
     } catch(e) {
