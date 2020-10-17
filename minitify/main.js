@@ -15,7 +15,7 @@ function createWindow () {
             worldSafeExecuteJavaScript: true,
             nodeIntegration: false,
             contextIsolation: true,
-            preload: __dirname + '/preload.js'
+            preload: __dirname + '/preload_player.js'
         },
         'icon': 'build/icon.png',
     })
@@ -59,7 +59,7 @@ function createChildWindow (y) {
             worldSafeExecuteJavaScript: true,
             nodeIntegration: false,
             contextIsolation: true,
-            preload: __dirname + '/preload.js'
+            preload: __dirname + '/preload_controller.js'
         },
     })
 
@@ -126,13 +126,28 @@ ipcMain.on('plz-path', (event,) => {
 
 let [name, id, artists] = [null, null, null]
 
+let myAccessTokenChange = false;
+
+ipcMain.on("AccessTokenfromPlayerToMain", (event, b) => {
+    myAccessTokenChange = b
+});
+
 ipcMain.on("fromPlayerToMain", (event, data) => {
     [name, id, artists] = data;
 });
 
-ipcMain.on('fromControllerToMain', (event,args) => {
-    if (args != id){
-        event.sender.send('fromMainToController', [name, id, artists]);
+ipcMain.on('fromControllerToMain', (event, id_) => {
+    let sendData = null;
+
+    if (id_ != id){
+        sendData = [name, id, artists]
+    } else if (myAccessTokenChange) {
+        sendData = [myAccessTokenChange]
+        myAccessTokenChange = false;
+    }
+
+    if (sendData != null){
+        event.sender.send('fromMainToController', sendData);
     }
 });
 
