@@ -5,14 +5,27 @@
   "repository": "https://github.com/llbxg/minitify.git",
   "author": "kosh",
   "license": "MIT",
+
+  "build": {
+    "appId": "com.electron.minitify",
+    "directories": {
+      "output": "dist"
+    }
+  },
+
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder"
   },
 
   "dependencies": {
     "colorthief": "^2.3.2",
-    "electron": "^10.1.3",
     "node-vibrant": "3.2.0-alpha",
     "spotify-web-api-node": "^5.0.0"
+  },
+
+  "devDependencies":{
+    "electron": "^10.1.3",
+    "electron-builder": "^22.9.1"
   }
 }
