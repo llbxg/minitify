@@ -1,4 +1,17 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
+const fs = require("fs");
+const path = require('path');
+
+const pathConfig = path.join(app.getPath('userData'), 'setting', 'config.json');
+
+let alwaysOnTop = null;
+if(checkFileExist(pathConfig)){
+    let configData = fs.readFileSync(pathConfig, 'utf8');
+    configData = JSON.parse(configData);
+    alwaysOnTop = configData.alwaysOnTop;
+} else {
+    alwaysOnTop = false;
+}
 
 let win = null
 
@@ -10,6 +23,7 @@ function createWindow () {
         resizable:false,
         frame: false,
         backgroundColor:'#16181D',
+        alwaysOnTop: alwaysOnTop,
 
         webPreferences: {
             worldSafeExecuteJavaScript: true,
@@ -152,3 +166,15 @@ ipcMain.on('fromControllerToMain', (event, id_) => {
     }
 });
 
+/* ---------- 🥬 function ---------- */
+
+function checkFileExist(filePath) {
+    let isExist = false;
+    try {
+        fs.readFileSync(filePath);
+        isExist = true;
+    } catch(err) {
+        isExist = false;
+    }
+    return isExist;
+  }
