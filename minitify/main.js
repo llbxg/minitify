@@ -10,6 +10,7 @@ function createWindow () {
         resizable:false,
         frame: false,
         backgroundColor:'#16181D',
+        alwaysOnTop: true,
 
         webPreferences: {
             worldSafeExecuteJavaScript: true,
