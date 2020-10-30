@@ -34,7 +34,7 @@ function createWindow () {
         'icon': 'build/icon.png',
     })
 
-    win.loadFile('index.html')
+    win.loadFile('player.html')
     win.setMenu(null);
 
     //win.webContents.openDevTools()
