@@ -178,3 +178,15 @@ main{
 #artistsName::-webkit-scrollbar {  /* Chrome, Safari 対応 */
     display:none;
 }
+
+#circle{
+    z-index: 2;
+    background-color: rgba(28, 29, 27, 0);
+    width: 7px;
+    height: 3px;
+    border-radius: 10%;
+    opacity: 0.5;
+    position: absolute;
+    bottom: 0px;
+    left: -20px;
+}

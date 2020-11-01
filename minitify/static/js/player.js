@@ -44,6 +44,7 @@ function getColor(theme, url){
     const previous = document.getElementById('previous');
     const next = document.getElementById('next');
     const pp = document.getElementById('pp');
+    const c = document.getElementById( "circle" ) ;
     Vibrant.from(url).getPalette()
         .then((palette) => {
             const [theme1, theme2] = theme;;
@@ -54,6 +55,7 @@ function getColor(theme, url){
             previous.setAttribute("style", `background: linear-gradient(to left, rgba(0,0,0,0), rgba(${r2}, ${g2}, ${b2},0.8));`);
             next.setAttribute("style", `background: linear-gradient(to right, rgba(0,0,0,0), rgba(${r2}, ${g2}, ${b2},0.8));`);
             pp.setAttribute("style", `background: radial-gradient(circle farthest-side, rgba(${r2}, ${g2}, ${b2},0.8), rgba(0,0,0,0) );`);
+            c.setAttribute("style", `background-color: rgba(${r2}, ${g2}, ${b2},0.7);`);
         })
 }
 
@@ -107,6 +109,10 @@ exports.setJucket =  setJucket
 async function setJucket() {
     const playingTrack = document.getElementById('playingTrack');
     const albumJucket = document.getElementById('jucket');
+
+    const c = document.getElementById( "circle" ) ;
+    const color = window.getComputedStyle(c, '').getPropertyValue('background-color');
+
     let statusCode = 400;
     try{
         const data = await spotifyApi.getMyCurrentPlayingTrack();
@@ -123,6 +129,10 @@ async function setJucket() {
                 setColor(url);
                 sendfromPlayerToMain([name, id, artists]);
             }
+
+            const dt = 150 / (data.body.item.duration_ms)
+            c.style.left = `${dt*data.body.progress_ms}px`;
+            c.style.backgroundColor = color;
 
         } else {
             albumJucket.setAttribute("src", "");
