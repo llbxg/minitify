@@ -18,8 +18,8 @@ contextBridge.exposeInMainWorld(
         close: (where) => {
             ipcRenderer.send('close', where);
         },
-        makeChild: (height) => {
-            ipcRenderer.send('makeChild', height);
+        makeController: (height) => {
+            ipcRenderer.send('makeController', height);
         }
      }
 );

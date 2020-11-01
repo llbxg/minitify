@@ -34,7 +34,7 @@ function createWindow () {
         'icon': 'build/icon.png',
     })
 
-    win.loadFile('index.html')
+    win.loadFile('player.html')
     win.setMenu(null);
 
     //win.webContents.openDevTools()
@@ -52,16 +52,16 @@ function createWindow () {
     });
 };
 
-let childWin = null
+let controllerWin = null
 
-function createChildWindow (y) {
+function createControllerWindow (y) {
     const parentY = win.webContents.getOwnerBrowserWindow().getBounds().y
-    const childY =  parentY + 300 > y ? parentY - 60 : parentY + 150
+    const controllerY =  parentY + 300 > y ? parentY - 60 : parentY + 150
 
-    childWin = new BrowserWindow({
+    controllerWin = new BrowserWindow({
         parent: win,
         x:win.webContents.getOwnerBrowserWindow().getBounds().x,
-        y:childY,
+        y:controllerY,
 
         width: 150,
         height: 65,
@@ -78,16 +78,16 @@ function createChildWindow (y) {
         },
     })
 
-    childWin.loadFile('controller.html')
+    controllerWin.loadFile('controller.html')
 
-    //childWin.webContents.openDevTools()
+    //ontrollerWin.webContents.openDevTools()
 
-    childWin.once('ready-to-show', () => {
-        childWin.show()
+    controllerWin.once('ready-to-show', () => {
+        controllerWin.show()
     })
 
-    childWin.on('closed', () => {
-        childWin = null
+    controllerWin.on('closed', () => {
+        controllerWin = null
     })
 }
 
@@ -115,17 +115,17 @@ app.on('activate', () => {
 ipcMain.on("close", (event, args) => {
     if (args=='main'){
         win.close()
-        if (childWin != null){
-            childWin.close()
+        if (controllerWin != null){
+            controllerWin.close()
         }
     } else if (args == 'controller' ){
-        childWin.close()
+        controllerWin.close()
     }
 });
 
-ipcMain.on('makeChild', (event,height) => {
-    if(childWin == null){
-        createChildWindow(height);
+ipcMain.on('makeController', (event,height) => {
+    if(controllerWin == null){
+        createControllerWindow(height);
     }
 });
 
